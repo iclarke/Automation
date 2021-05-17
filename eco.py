@@ -4,16 +4,17 @@ section_list = ['leaders', 'britain', 'europe', 'united-states', 'middle-east-an
                 'the-americas', 'asia', 'china', 'international', 'business', 'finance-and-economics', 'science-and-technology', 'books-and-arts', 'business', 'obituary']
 
 
-clear_directory("output")
+# clear_directory("output")
 clear_directory("output/PDF_Economist")
 #end_date = input("Enter end date as a string (YYYYMMDD) \n")
-end_date = '20210507'
-generate_site_maps(end_date, section_list)
+# end_date = '20210514'
+# generate_site_maps(end_date, section_list)
 url_list = generate_url_list(section_list)
 
 
 driver = init_driver()
 login(driver)
+driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 for url in url_list:
     print_page(driver, url)
 

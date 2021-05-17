@@ -8,6 +8,7 @@ import os
 import shutil
 import json
 from selenium import webdriver
+import undetected_chromedriver.v2 as uc
 
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
@@ -98,7 +99,7 @@ def init_driver():
     chrome_options.add_experimental_option('prefs', profile)
     chrome_options.add_argument('--kiosk-printing')
 
-    driver = webdriver.Chrome(chrome_options=chrome_options)
+    driver = uc.Chrome(chrome_options=chrome_options)
     return driver
 
 
@@ -143,10 +144,10 @@ def print_page(driver, page_url):
 
 
 def move_files():
-    # dir_path = 'C:\\Users\\samy.doreau\\Downloads\\'
-    # target_path = 'C:\\Users\\samy.doreau\\Dropbox\\Code\\Automation\\output\\PDF\\'
-    dir_path = str(Path.home() / "Downloads")
-    target_path = f'{Path.home()}/Dropbox/Code/Automation/output/PDF_Economist'
+    dir_path = 'C:\\Users\\samy.doreau\\Downloads\\'
+    target_path = 'C:\\Users\\samy.doreau\\Dropbox\\Code\\Automation\\output\\PDF\\'
+    # dir_path = str(Path.home() / "Downloads")
+    # target_path = f'{Path.home()}/Dropbox/Code/Automation/output/PDF_Economist'
 
     today = d.datetime.now().date()
     for file in os.listdir(dir_path):

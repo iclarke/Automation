@@ -20,20 +20,53 @@ lemonde_pwd = 'A2O0I164ab@@'
 home_page = 'https://journal.lemonde.fr/'
 
 
-def move_files():
-    # dir_path = 'C:\\Users\\samy.doreau\\Downloads\\'
-    # target_path = 'C:\\Users\\samy.doreau\\Dropbox\\Code\\Automation\\output\\PDF_Lemonde\\'
-    dir_path = str(Path.home() / "Downloads")
-    target_path = f'{Path.home()}/Dropbox/Code/Automation/output/PDF_Lemonde'
+def scan_downloads_folder(dir_path):
+    file_count = 0
+    for file in os.listdir(dir_path):
+        file_time = d.datetime.fromtimestamp(
+            os.path.getctime(dir_path + '/' + file))
+        filename, file_extension = os.path.splitext(f'{dir_path}/{file}')
+        if file_time.date() == today and file_extension == '.pdf':
+            file_count += 1
 
+    return file_count
+
+
+def move_files(dir_path, target_path):
+    files_moved = 0
     today = d.datetime.now().date()
     for file in os.listdir(dir_path):
         file_time = d.datetime.fromtimestamp(
             os.path.getctime(dir_path + '/' + file))
         filename, file_extension = os.path.splitext(f'{dir_path}/{file}')
         if file_time.date() == today and file_extension == '.pdf':
-            print(filename)
-            shutil.move(f'{dir_path}/{file}', f'{target_path}/{file}')
+            try:
+                shutil.move(f'{dir_path}/{file}', f'{target_path}/{file}')
+                files_moved += 1
+                print(f'{files_moved} files moved', end='')
+
+            except:
+                print(f'Unable to move file {file}')
+    return print(f'Moving complete, {files_moved} were moved to the target folder.')
+
+
+def scan_directory(dir_name):
+    file_count = 0
+    for filename in os.listdir(dir_name):
+        file_path = os.path.join(dir_name, filename)
+        if os.path.isfile(file_path):
+            file_count += 1
+    return file_count
+
+
+def ask_questions(answer_set, question_text):
+    question_cleared = False
+
+    while question_cleared == False:
+        user_input = input(question_text)
+        if user_input.lower() in answer_set:
+            question_cleared = True
+            return user_input
 
 
 def clear_directory(dir_name):
@@ -100,6 +133,7 @@ def lm_login(driver):
 
 
 def print_articles(driver, nb_of_articles):
+    articles_printed = 0
     # CLick on first article, then use arrows to iterate
     wait(driver, 10).until(EC.visibility_of_element_located(
         (By.XPATH, '/html/body/div[2]/div[8]/div[2]/div[1]/div[1]/div[1]/div/div/div[3]/div/div[1]/div[1]/div/div[2]/div[2]'))).click()
@@ -112,6 +146,9 @@ def print_articles(driver, nb_of_articles):
 
             # Print content
             driver.execute_script('window.print();')
+
+            print(f'{articles_printed} articles printed.')
+
         except:
             print(f'Could not print article {i}')
             break
